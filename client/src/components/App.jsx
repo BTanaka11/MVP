@@ -1,8 +1,13 @@
 import React from 'react';
+import {Leaderboard} from './Leaderboard.jsx';
 
 const App = ()=> {
   return (
-    <div>i am render</div>
+    <div>
+      <title>JIGSAW CHALLENGE</title>
+      <button>Play</button>
+      <Leaderboard></Leaderboard>
+    </div>
   )
 }
 
