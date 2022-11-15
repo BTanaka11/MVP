@@ -4,18 +4,31 @@ import styled from 'styled-components';
 const StyledImg = styled.img`
   object-fit: none;
   object-position: ${props=>props.poz};
+  transform: rotate(${({rotation})=>{
+    return {0:'0', 3:'90', 2:'180',1:'270'}[rotation[0]];
+  }}deg);
 `;
 
-const OptimalImageSplitting = (width, height, tiles)=> {
+const StyledBoard = styled.div`
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: ${props=>props.tileGap}px;
+  width: ${props=>props.widthz}px;
+  height: ${props=>props.heightz}px;
+  align-content: center;
+`;
+
+const OptimalImageSplitting = (width, height, tileCount)=> {
   let maxArea=-Infinity;
   let maxConfig={}
-  for (let x = 1; x <= tiles; x ++) {
+  for (let x = 1; x <= tileCount; x ++) {
     let rowCount = x;
-    if (tiles % rowCount === 0) {
-      let colCount = tiles / rowCount;
+    if (tileCount % rowCount === 0) {
+      let colCount = tileCount / rowCount;
       let sideLength = Math.min(height/rowCount, width/colCount);
-      let area = sideLength * sideLength * tiles
-      if (area > maxArea) {
+      let area = sideLength * sideLength * tileCount
+      if (area >= maxArea) {
         maxArea = area;
         maxConfig.rows = rowCount;
         maxConfig.cols = colCount;
@@ -27,34 +40,53 @@ const OptimalImageSplitting = (width, height, tiles)=> {
 }
 
 const convertSplitDataToObjectPosition = (splitData) => {
-  let results =[];
+  let resultsMatrix =[];
+  let randomRotate = {
+    1: [0,1,2,3],
+    2: [3,0,1,2],
+    3: [2,3,0,1],
+    4: [1,2,3,0]
+  };
+
+  const getRandomRotation = () => {
+    return randomRotate[Math.ceil(Math.random()*4)];
+  };
+
   for (let i = 1; i <= splitData.rows; i ++) {
+    resultsMatrix.push([]);
     for (let k = 1; k <= splitData.cols; k ++) {
-      results.push(`left -${(i-1)*splitData.side}px top -${(k-1)*splitData.side}px`)
+      let cssHelper = `left -${(k-1)*splitData.side}px top -${(i-1)*splitData.side}px`;
+      resultsMatrix[i-1].push({cssHelper: cssHelper,matrixLoc: [i-1, k-1],rotation:getRandomRotation()});
     }
   }
-  return results;
+
+  return resultsMatrix;
 }
 
-export const Game = ({single_image, difficulty})=> {
-  let tileCount = 10;
-  let splitData = OptimalImageSplitting(single_image.width, single_image.height, tiles);
+export const Game = ({single_image, difficulty, tileCount})=> {
+  console.log('gamed!')
+  let splitData = OptimalImageSplitting(single_image.width, single_image.height, tileCount);
 
-  let splitData2 = convertSplitDataToObjectPosition(splitData);
+  const tileGap = 10;
 
-  //take aspect ratio and
+  const [piecesSolved, setpiecesSolved] = React.useState(0);
+  const [matrix, setMatrix] = React.useState(convertSplitDataToObjectPosition(splitData));
 
-  return (<div>game!!
+  let splitData2=[];
+  for (let i = 0; i < matrix.length; i ++) {
+    for (let k=0; k < matrix[i].length; k++) {
+      splitData2.push(matrix[i][k]);
+    }
+  };
+
+  return (<StyledBoard tileGap={tileGap} widthz={splitData.cols * splitData.side + tileGap*(splitData.cols + 1)} heightz={splitData.rows * splitData.side + tileGap*(splitData.rows + 1)}>
     {splitData2.map((item,index)=> {
-      return <StyledImg poz={item} src={img_url} width={splitData.side} height={splitData.side}></StyledImg>
+      return <Tile item={item} key={index} url={single_image.url} side={splitData.side}></Tile>
     })}
-  </div>)
+  </StyledBoard>)
 }
 
-const Tile = () => {
-  single_image
-}
+export const Tile = ({item,url,side})=> {
 
-const fullImg = (img_url, fullImageRef) => {
-  return <img ref={fullImageRef} src={img_url}></img>
+  return <StyledImg poz={item.cssHelper} rotation={item.rotation} src={url} width={side} height={side}></StyledImg>
 }
