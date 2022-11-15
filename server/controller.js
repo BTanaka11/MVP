@@ -8,7 +8,15 @@ const retrieveCategories = () => {
     headers: {Authorization: `Bearer ${process.env.SHUTTERSTOCK_API_TOKEN}`}
   })
 }
-
+const retrieveRandomImage = (img_category) => {
+  return axios({
+    method: 'get',
+    url: 'https://api.shutterstock.com/v2/images/search',
+    headers: {Authorization: `Bearer ${process.env.SHUTTERSTOCK_API_TOKEN}`},
+    params: {category: img_category}
+  })
+}
 module.exports = {
-  retrieveCategories: retrieveCategories
+  retrieveCategories: retrieveCategories,
+  retrieveRandomImage: retrieveRandomImage
 }

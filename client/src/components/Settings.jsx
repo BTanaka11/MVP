@@ -7,34 +7,33 @@ export const SettingsModal = ({image_categories, setMode})=> {
   const [difficulty, setDifficulty] = React.useState('Easy');
   const name = React.useRef('');
   const [img_category, setimg_category] = React.useState(image_categories[0]);
-  const [img_url, setImage_Url] = React.useState('');
+  const [single_image, setSingle_image] = React.useState(null);
   const [mode2, setMode2] = React.useState('modal2');
 
-  const formValidator = ()=> {
+  const formValidator = (e)=> {
     e.preventDefault();
-    if (name.current != '') {
+    if (name.current === '') {
       alert('Name is required!')
     } else {
       axios({
         method: 'get',
-        url: 'https://api.shutterstock.com/v2/images/search',
-        headers: {Authorization: `Bearer ${process.env.SHUTTERSTOCK_API_TOKEN}`},
-        params: {category: img_category}
+        url: '/shutterstock_image',
+        params: {img_category: img_category}
       })
       .then((val)=> {
-        let randomIndex = Math.floor(Math.random()*val.data.data.length)
-        setImage_Url(val.data.data[randomIndex].assets.preview_1000.url);
+        setSingle_image(val.data);
         setMode2('game');
       })
       .catch((err)=> {console.log(err)})
-
     }
   }
 
   if (mode2 === 'modal2') {
     return <form id="gamesettings" onSubmit={formValidator}>
+
       <label htmlFor="username">Username:</label>
-      <input type="text" name="username" ref={name} placeholder="Enter your name..."></input>
+      <input type="text" name="username" id="username" ref={name} placeholder="Enter your name..."></input>
+
       <label htmlFor="difficulty">Choose a difficulty:</label>
       <select onChange={(e)=>{setDifficulty(e.target.value)}} name="difficulty" id="difficulty">
         <option value="Easy">Easy</option>
@@ -49,10 +48,10 @@ export const SettingsModal = ({image_categories, setMode})=> {
         })}
       </select>
 
-      <input type="submit">Start Game!</input>
+      <input type="submit"></input>
     </form>
   } else {
-    return <Game img_url={img_url} difficulty={difficulty}></Game>
+    return <Game single_image={single_image} difficulty={difficulty}></Game>
   }
 
 }

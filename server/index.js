@@ -1,6 +1,6 @@
 const express = require('express');
 const {getLeaderboard} = require('../database/postgresdb.js');
-const {retrieveCategories} = require('./controller.js');
+const {retrieveCategories, retrieveRandomImage} = require('./controller.js');
 
 const app = express();
 app.use(express.json());
@@ -17,7 +17,25 @@ app.get('/shutterstock_image_categories', (req, res)=> {
 
 app.get('/shutterstock_image', (req, res)=> {
 
-  res.send();
+  res.send({
+    url: 'https://ak.picdn.net/shutterstock/photos/2112280592/watermark_1000/223ca7790ff5d3ef7d19c18efb62885f/preview_1000-2112280592.jpg',
+    width: 1000,
+    height: 666
+  });
+
+  // retrieveRandomImage()
+  // .then((val)=> {
+  //   let randomIndex = Math.floor(Math.random()*val.data.data.length)
+  //   let datum = val.data.data[randomIndex].assets.preview_1000;
+  //   if (datum.url) {
+  //     res.send(datum);
+  //   } else {
+  //     res.status(500).send();
+  //   }
+  // })
+  // .catch((err)=> {
+  //   res.status(500).send();
+  // })
 });
 
 app.get('/leaderboard', (req, res)=> {
