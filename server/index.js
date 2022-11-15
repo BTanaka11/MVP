@@ -1,14 +1,22 @@
 const express = require('express');
 const {getLeaderboard} = require('../database/postgresdb.js');
-console.log(typeof getLeaderboard);
+const {retrieveCategories} = require('./controller.js');
 
 const app = express();
 app.use(express.json());
 
 app.use(express.static(__dirname + '/../client/dist'));
 
+app.get('/shutterstock_image_categories', (req, res)=> {
+  retrieveCategories()
+  .then((val)=>{
+    res.send(val.data.data);
+  })
+  .catch((err)=>{res.status(500).send()})
+});
+
 app.get('/shutterstock_image', (req, res)=> {
-  // console.log(process.env.SHUTTERSTOCK_TOKEN);
+
   res.send();
 });
 
