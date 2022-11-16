@@ -1,8 +1,4 @@
-title {
-  font-weight:700;
-  font-size:larger;
-  font-family: 'Play', sans-serif;
-}
+
 
 #gamesettings {
   display: flex;
@@ -47,7 +43,10 @@ label {
 .gameoverlay {
   font-size: x-large;
   width:auto;
-  border: 4px solid orange;
+  border: 4px solid red;
+  text-align: center;
+  font-family: 'Play', sans-serif;
+  font-weight: 400;
 }
 
 #gamename {

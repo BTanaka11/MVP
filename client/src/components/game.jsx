@@ -8,9 +8,7 @@ const StyledImg = styled.img`
   transform: rotate(${({rotation})=>{
     return {0:'0', 3:'90', 2:'180',1:'270'}[rotation[0]];
   }}deg);
-  color: #111;
-  background: yellow;
-  box-shadow: 0 0 5px yellow;
+  box-shadow: ${props=>props.glowUnsolved ? '0 0 5px red' : 'none'};
 `;
 
 const StyledBoard = styled.div`
@@ -61,7 +59,8 @@ const convertSplitDataToObjectPosition = (splitData) => {
     resultsMatrix.push([]);
     for (let k = 1; k <= splitData.cols; k ++) {
       let cssHelper = `left -${(k-1)*splitData.side}px top -${(i-1)*splitData.side}px`;
-      resultsMatrix[i-1].push({cssHelper: cssHelper,matrixLoc: [i-1, k-1],rotation:getRandomRotation()});
+      let randomRot = getRandomRotation();
+      resultsMatrix[i-1].push({cssHelper: cssHelper,matrixLoc: [i-1, k-1],rotation:randomRot, solvedTile: randomRot === randomRotate[1] ? true: false});
     }
   }
 
@@ -73,11 +72,12 @@ export const Game = ({single_image, img_category, tileCount, setMode, name})=> {
 
   const [tileGap, setTileGap] = React.useState(10);
   const [timer, setTimer] = React.useState(0);
-  const [hintAvailable, sethintAvailable] = React.useState(true);
+  const [hintCount, sethintCount] = React.useState(0);
   const [matrix, setMatrix] = React.useState(convertSplitDataToObjectPosition(splitData));
+  const [glowUnsolved, setglowUnsolved] = React.useState(false);
 
   const calculateScore = () => {
-    return Math.floor(300 / timer * tileCount);
+    return Math.floor(300 / timer * tileCount * (.5 ** hintCount));
   };
 
   React.useEffect(() => {
@@ -107,19 +107,25 @@ export const Game = ({single_image, img_category, tileCount, setMode, name})=> {
         if (matrix[i][k].rotation === randomRotate[1]) {
           countSolved++;
         }
-        newMatrix[i].push({cssHelper: matrix[i][k].cssHelper, matrixLoc: [i, k],rotation:matrix[i][k].rotation});
+        newMatrix[i].push({cssHelper: matrix[i][k].cssHelper, matrixLoc: [i, k],rotation:matrix[i][k].rotation, solvedTile: matrix[i][k].solvedTile});
       }
     }
+
     if (newMatrix[matrixLoc[0]][matrixLoc[1]].rotation === randomRotate[1]) {
       newMatrix[matrixLoc[0]][matrixLoc[1]].rotation = randomRotate[2]
+      newMatrix[matrixLoc[0]][matrixLoc[1]].solvedTile = false;
     } else if (newMatrix[matrixLoc[0]][matrixLoc[1]].rotation === randomRotate[2]) {
-      newMatrix[matrixLoc[0]][matrixLoc[1]].rotation = randomRotate[3]
+      newMatrix[matrixLoc[0]][matrixLoc[1]].rotation = randomRotate[3];
+      newMatrix[matrixLoc[0]][matrixLoc[1]].solvedTile = false;
     } else if (newMatrix[matrixLoc[0]][matrixLoc[1]].rotation === randomRotate[3]) {
-      newMatrix[matrixLoc[0]][matrixLoc[1]].rotation = randomRotate[4]
+      newMatrix[matrixLoc[0]][matrixLoc[1]].rotation = randomRotate[4];
+      newMatrix[matrixLoc[0]][matrixLoc[1]].solvedTile = false;
     } else if (newMatrix[matrixLoc[0]][matrixLoc[1]].rotation === randomRotate[4]) {
       newMatrix[matrixLoc[0]][matrixLoc[1]].rotation = randomRotate[1]
+      newMatrix[matrixLoc[0]][matrixLoc[1]].solvedTile = true;
       countSolved++;
     }
+
     setMatrix(newMatrix);
     if (countSolved === Number(tileCount)) {
       setTileGap(0);
@@ -137,24 +143,32 @@ export const Game = ({single_image, img_category, tileCount, setMode, name})=> {
       })
       .catch((err)=> {alert('couldnt save to leaderboard')});
 
-      setTimeout(()=>{setMode('home')}, 6000);
+      setTimeout(()=>{setMode('home')}, 7000);
     }
+  };
+
+  const hintHandler = () => {
+    setglowUnsolved(true);
+    sethintCount(hintCount + 1);
+    setTimeout(()=> {
+      setglowUnsolved(false);
+    }, 1000)
   };
 
   return (
   <div>
 
-    {tileGap === 0 ? <div className="gameoverlay">Solved in {timer} seconds! Your score is 300/{timer}s *{tileCount} tiles = {calculateScore()}</div> : <div className="gameoverlay">Time ellapsed: {timer} seconds</div>}
+    {tileGap === 0 ? <div className="gameoverlay">Solved in {timer} seconds! Your score is 300/{timer}s *{tileCount} tiles{hintCount > 0 ? ` with a halving Hint penalty applied ${hintCount} times` : ''} = {calculateScore()}</div> : <div className="gameoverlay">Time ellapsed: {timer} seconds     Hints used: {hintCount}</div>}
     <StyledBoard tileGap={tileGap} widthz={splitData.cols * splitData.side + tileGap*(splitData.cols + 1)} heightz={splitData.rows * splitData.side + tileGap*(splitData.rows + 1)}>
       {splitData2.map((item,index)=> {
-        return <Tile item={item} key={index} url={single_image.url} side={splitData.side} adjustMatrix={adjustMatrix}></Tile>
+        return <Tile item={item} key={index} url={single_image.url} side={splitData.side} adjustMatrix={adjustMatrix} glowUnsolved={glowUnsolved}></Tile>
       })}
     </StyledBoard>
-    {hintAvailable ? <button>Hint</button> : <div></div>}
+    <div className="buttoncontainer"><button className="playbutton" onClick={hintHandler}>Hint</button></div>
   </div>
   )
 }
 
-export const Tile = ({item,url,side,adjustMatrix})=> {
-  return <StyledImg poz={item.cssHelper} rotation={item.rotation} src={url} width={side} height={side} onClick={()=>adjustMatrix(item.matrixLoc)}></StyledImg>
+export const Tile = ({item,url,side,adjustMatrix,glowUnsolved})=> {
+  return <StyledImg poz={item.cssHelper} rotation={item.rotation} glowUnsolved={item.solvedTile===false && glowUnsolved === true? true : false} src={url} width={side} height={side} onClick={()=>adjustMatrix(item.matrixLoc)}></StyledImg>
 }
