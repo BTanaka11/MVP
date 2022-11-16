@@ -8,6 +8,7 @@ const App = ()=> {
   const [mode, setMode] = React.useState('home');
 
   React.useEffect(()=> {
+    // setimage_categories(['holiday'])
     axios({
       method: 'get',
       url: '/shutterstock_image_categories'
@@ -23,7 +24,7 @@ const App = ()=> {
   } else {
     if (mode === 'home') {
       return <React.Fragment>
-          <button onClick={()=> {setMode('modal')}}>Play</button>
+          <div className="buttoncontainer"><button className="playbutton" onClick={()=> {setMode('modal')}}>Play</button></div>
           <Leaderboard></Leaderboard>
       </React.Fragment>
     } else if (mode === 'modal') {

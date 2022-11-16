@@ -14,7 +14,7 @@ const getLeaderboard = ()=> {
 }
 
 const addToLeaderboard = (data) => {
-  return pool.query('INSERT INTO leaderboard(Username, Difficulty, Image_Category,Score) VALUES ($1, $2, $3, $4)', [data.username, data.difficulty, data.image_category, data.score]);
+  return pool.query('INSERT INTO leaderboard(Username, Image_Category, Tile_Count, Time_to_Solve, Score) VALUES ($1, $2, $3, $4, $5)', [data.Username, data.Image_Category, data.Tile_Count, data.Time_to_Solve, data.Score]);
 }
 
 module.exports = {

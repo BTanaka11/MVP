@@ -1,25 +1,77 @@
 title {
-  font-weight: bolder;
-  font-size: larger;
+  font-weight:700;
+  font-size:larger;
+  font-family: 'Play', sans-serif;
 }
 
 #gamesettings {
   display: flex;
   flex-direction: column;
+  width:auto;
+  text-align: center;
+  font-family: 'Play', sans-serif;
+  font-weight: 400;
+  border: 3px solid red;
+  border-radius: 5px;
+  padding-bottom: 20px;
+  justify-content: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-top: 20px;
+}
+
+label {
+  padding-top: 20px;
+}
+
+.playbutton {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px;
+  width:fit-content;
+  font-family: 'Play', sans-serif;
+  font-weight: 700;
+  font-size: x-large;
+  color: powderblue;
+  background-color:red;
+  border-color: red;
+  padding: 10px;
+  left: 50px;
+}
+
+.buttoncontainer {
+  text-align: center;
 }
 
 .gameoverlay {
-  font-size: xx-large;
-  width: 50%;
+  font-size: x-large;
+  width:auto;
   border: 4px solid orange;
 }
 
 #gamename {
   font-size: xx-large;
   justify-content: center;
-  font-family: 'Times New Roman', Times, serif;
-  font-weight: bolder;
+  font-family: 'Play', sans-serif;
+  font-weight: 700;
   color: red;
   text-align: center;
   background-color: powderblue;
+}
+
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  border: 3px solid red;
+  text-align: center;
+  font-family: 'Play', sans-serif;
+  font-weight: 400;
+  border-radius: 20px;
+  margin-top: 20px;
+}
+
+th,td {
+  padding: 10px;
 }

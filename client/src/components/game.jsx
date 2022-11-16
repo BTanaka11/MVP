@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const StyledImg = styled.img`
   object-fit: none;
@@ -67,7 +68,7 @@ const convertSplitDataToObjectPosition = (splitData) => {
   return resultsMatrix;
 }
 // SCORE = 300 / completiontime * tilecount - errorRateReduction. if hintcount used divide by 2.
-export const Game = ({single_image, difficulty, tileCount})=> {
+export const Game = ({single_image, img_category, tileCount, setMode, name})=> {
   let splitData = OptimalImageSplitting(single_image.width, single_image.height, tileCount);
 
   const [tileGap, setTileGap] = React.useState(10);
@@ -75,10 +76,20 @@ export const Game = ({single_image, difficulty, tileCount})=> {
   const [hintAvailable, sethintAvailable] = React.useState(true);
   const [matrix, setMatrix] = React.useState(convertSplitDataToObjectPosition(splitData));
 
+  const calculateScore = () => {
+    return Math.floor(300 / timer * tileCount);
+  };
+
   React.useEffect(() => {
-    const interval = setInterval(() => {setTimer(timer + 1)}, 1000);
-    return () => clearInterval(interval);
-  }, [timer]);
+    var interval;
+    if (tileGap > 0) {
+      interval = setInterval(() => {setTimer(timer + 1)}, 1000);
+      return () => clearInterval(interval);
+    } else {
+      clearInterval(interval)
+    }
+
+  }, [timer, tileGap]);
 
   let splitData2=[];
   for (let i = 0; i < matrix.length; i ++) {
@@ -112,13 +123,28 @@ export const Game = ({single_image, difficulty, tileCount})=> {
     setMatrix(newMatrix);
     if (countSolved === Number(tileCount)) {
       setTileGap(0);
+
+      axios({
+        method:'post',
+        url: '/leaderboard',
+        data: {
+          Username: name,
+          Image_Category: img_category,
+          Tile_Count: tileCount,
+          Time_to_Solve: timer,
+          Score: calculateScore()
+        }
+      })
+      .catch((err)=> {alert('couldnt save to leaderboard')});
+
+      setTimeout(()=>{setMode('home')}, 6000);
     }
   };
 
   return (
   <div>
 
-    {tileGap === 0 ? <div className="gameoverlay">Solved in {timer} seconds!</div> : <div className="gameoverlay">Time ellapsed: {timer} seconds</div>}
+    {tileGap === 0 ? <div className="gameoverlay">Solved in {timer} seconds! Your score is 300/{timer}s *{tileCount} tiles = {calculateScore()}</div> : <div className="gameoverlay">Time ellapsed: {timer} seconds</div>}
     <StyledBoard tileGap={tileGap} widthz={splitData.cols * splitData.side + tileGap*(splitData.cols + 1)} heightz={splitData.rows * splitData.side + tileGap*(splitData.rows + 1)}>
       {splitData2.map((item,index)=> {
         return <Tile item={item} key={index} url={single_image.url} side={splitData.side} adjustMatrix={adjustMatrix}></Tile>

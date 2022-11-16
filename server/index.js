@@ -1,5 +1,5 @@
 const express = require('express');
-const {getLeaderboard} = require('../database/postgresdb.js');
+const {getLeaderboard, addToLeaderboard} = require('../database/postgresdb.js');
 const {retrieveCategories, retrieveRandomImage} = require('./controller.js');
 
 const app = express();
@@ -46,7 +46,16 @@ app.get('/leaderboard', (req, res)=> {
   .catch((err)=> {
     res.status(500).send();
   })
+});
 
+app.post('/leaderboard', (req, res)=> {
+  addToLeaderboard(req.body)
+  .then(()=> {
+    res.send();
+  })
+  .catch((err)=> {
+    res.status(500).send();
+  })
 });
 
 const PORT = 3000;

@@ -3,7 +3,6 @@ import axios from 'axios';
 import {Game} from './game.jsx';
 
 export const SettingsModal = ({image_categories, setMode})=> {
-  const [difficulty, setDifficulty] = React.useState('Easy');
   const name = React.useRef('');
   const tileCount = React.useRef('');
   const [img_category, setimg_category] = React.useState(image_categories[0].name);
@@ -31,30 +30,30 @@ export const SettingsModal = ({image_categories, setMode})=> {
   if (mode2 === 'modal2') {
     return <form id="gamesettings" onSubmit={formValidator}>
 
-      <label htmlFor="username">Username:</label>
+      <label htmlFor="username">Username</label>
       <input type="text" name="username" id="username" ref={name} placeholder="Enter your name..."></input>
 
-      <label htmlFor="difficulty">Choose a difficulty:</label>
+      {/* <label htmlFor="difficulty">Choose a difficulty:</label>
       <select onChange={(e)=>{setDifficulty(e.target.value)}} name="difficulty" id="difficulty">
         <option value="Easy">Easy</option>
         <option value="Medium">Medium</option>
         <option value="Hard">Hard</option>
-      </select>
+      </select> */}
 
-      <label htmlFor="tile">How many tiles?:</label>
+      <label htmlFor="tile">How many tiles?</label>
       <input type="number" name="tile" id="tile" ref={tileCount} placeholder="Enter tile count (higher is harder)..."></input>
 
-      <label htmlFor="category">Choose an image category:</label>
+      <label htmlFor="category">Choose an image category</label>
       <select onChange={(e)=>{setimg_category(e.target.value)}} name="category" id="category">
         {image_categories.map((item,index)=> {
           return <option key={index} value={item.name}>{item.name}</option>
         })}
       </select>
 
-      <input type="submit"></input>
+      <div className="buttoncontainer"><input className="playbutton" type="submit" value="Play"></input></div>
     </form>
   } else {
-    return <Game single_image={single_image} difficulty={difficulty} tileCount={tileCount.current.value}></Game>
+    return <Game single_image={single_image} img_category={img_category} tileCount={tileCount.current.value} setMode={setMode} name={name.current.value}></Game>
   }
 
 }
