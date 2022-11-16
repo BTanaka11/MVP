@@ -3,11 +3,10 @@ import axios from 'axios';
 import {Game} from './game.jsx';
 
 export const SettingsModal = ({image_categories, setMode})=> {
-
   const [difficulty, setDifficulty] = React.useState('Easy');
   const name = React.useRef('');
   const tileCount = React.useRef('');
-  const [img_category, setimg_category] = React.useState(image_categories[0]);
+  const [img_category, setimg_category] = React.useState(image_categories[0].name);
   const [single_image, setSingle_image] = React.useState(null);
   const [mode2, setMode2] = React.useState('modal2');
 

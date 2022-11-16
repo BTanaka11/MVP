@@ -1,4 +1,4 @@
-## Image 2 Tile Puzzler ##
+## Tile 2 Image Puzzle ##
   An image split and rotation game and a cousin of jigsaw puzzles and tile puzzles.
   For players of all ages looking to kill some time on their train ride to work.
 

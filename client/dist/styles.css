@@ -7,3 +7,19 @@ title {
   display: flex;
   flex-direction: column;
 }
+
+.gameoverlay {
+  font-size: xx-large;
+  width: 50%;
+  border: 4px solid orange;
+}
+
+#gamename {
+  font-size: xx-large;
+  justify-content: center;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bolder;
+  color: red;
+  text-align: center;
+  background-color: powderblue;
+}
