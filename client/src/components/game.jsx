@@ -1,15 +1,35 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import axios from 'axios';
+
+const rotationAnimation0 = keyframes`
+  100% {transform: rotate(0deg)}
+`
+const rotationAnimation1 = keyframes`
+  100% {transform: rotate(270deg)}
+`
+const rotationAnimation2 = keyframes`
+  100% {transform: rotate(180deg)}
+`
+const rotationAnimation3 = keyframes`
+  100% {transform: rotate(90deg)}
+`
 
 const StyledImg = styled.img`
   object-fit: none;
   object-position: ${props=>props.poz};
-  transform: rotate(${({rotation})=>{
-    return {0:'0', 3:'90', 2:'180',1:'270'}[rotation[0]];
-  }}deg);
+  animation-fill-mode: both;
+  animation-name: ${({rotation})=>{
+    return {0:rotationAnimation0, 3:rotationAnimation3, 2:rotationAnimation2,1:rotationAnimation1}[rotation[0]]
+  }};
+  animation-duration: 1s;
+  animation-iteration-count: 1;
   box-shadow: ${props=>props.glowUnsolved ? '0 0 5px red' : 'none'};
 `;
+
+//   transform: rotate(${({rotation})=>{
+//     return {0:'0', 3:'90', 2:'180',1:'270'}[rotation[0]];
+//   }}deg);
 
 const StyledBoard = styled.div`
   display:flex;
