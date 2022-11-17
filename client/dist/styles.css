@@ -74,3 +74,11 @@ table {
 th,td {
   padding: 10px;
 }
+
+#fullimage {
+  align-content: center;
+  margin: auto;
+  margin-top: 20px;
+  display:flex;
+  width: fit-content;
+}

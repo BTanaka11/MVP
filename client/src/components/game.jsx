@@ -19,6 +19,9 @@ const StyledBoard = styled.div`
   width: ${props=>props.widthz}px;
   height: ${props=>props.heightz}px;
   align-content: center;
+  margin: auto;
+  padding-left: 20px;
+  margin-top: 20px;
 `;
 
 const OptimalImageSplitting = (width, height, tileCount)=> {
@@ -175,7 +178,9 @@ export const Game = ({single_image, img_category, tileCount, setMode, name})=> {
     return (
       <div>
         <div className="gameoverlay">3!</div>
-        <img src={single_image.url}></img>
+        <div id="fullimage">
+          <img src={single_image.url}></img>
+        </div>
       </div>
     )
   } else if (phase ==='croppedImage') {
@@ -212,6 +217,7 @@ export const Game = ({single_image, img_category, tileCount, setMode, name})=> {
         })}
       </StyledBoard>
       <div className="buttoncontainer"><button className="playbutton" onClick={hintHandler}>Hint</button></div>
+
     </div>
     )
   }
