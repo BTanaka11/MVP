@@ -24,7 +24,15 @@ const App = ()=> {
   } else {
     if (mode === 'home') {
       return <React.Fragment>
-          <div className="buttoncontainer"><button className="playbutton" onClick={()=> {setMode('modal')}}>Play</button></div>
+          <div className="buttoncontainer">
+            <div className="rotatingLeft"></div>
+            <div className="rotatingRight"></div>
+            <div className="rotatingLeft"></div>
+            <button className="playbutton" onClick={()=> {setMode('modal')}}>Play</button>
+            <div className="rotatingLeft"></div>
+            <div className="rotatingRight"></div>
+            <div className="rotatingLeft"></div>
+        </div>
           <Leaderboard></Leaderboard>
       </React.Fragment>
     } else if (mode === 'modal') {
