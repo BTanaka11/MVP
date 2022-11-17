@@ -4,7 +4,7 @@ import {Game} from './game.jsx';
 
 export const SettingsModal = ({image_categories, setMode})=> {
   const name = React.useRef('');
-  const tileCount = React.useRef('');
+  const tileCount = React.useRef(1);
   const [img_category, setimg_category] = React.useState(image_categories[0].name);
   const [single_image, setSingle_image] = React.useState(null);
   const [mode2, setMode2] = React.useState('modal2');
@@ -12,7 +12,7 @@ export const SettingsModal = ({image_categories, setMode})=> {
   const formValidator = (e)=> {
     e.preventDefault();
     if (name.current.value === '') {
-      alert('Name is required!')
+      alert('Name is required!');
     } else {
       axios({
         method: 'get',
@@ -41,7 +41,7 @@ export const SettingsModal = ({image_categories, setMode})=> {
       </select> */}
 
       <label htmlFor="tile">How many tiles?</label>
-      <input type="number" name="tile" id="tile" ref={tileCount} placeholder="Enter tile count (higher is harder)..."></input>
+      <input type="number" name="tile" id="tile" ref={tileCount} placeholder="Enter tile count (higher is harder)..." min="1" max="100"></input>
 
       <label htmlFor="category">Choose an image category</label>
       <select onChange={(e)=>{setimg_category(e.target.value)}} name="category" id="category">

@@ -230,7 +230,7 @@ export const Game = ({single_image, img_category, tileCount, setMode, name})=> {
     return (
     <div>
 
-      {tileGap === 0 ? <div className="gameoverlay">Solved in {timer} seconds! Your score is 300/{timer}s *{tileCount} tiles{hintCount > 0 ? ` with a halving Hint penalty applied ${hintCount} times` : ''} = {calculateScore()}</div> : <div className="gameoverlay">Time ellapsed: {timer} seconds     Hints used: {hintCount}</div>}
+      {tileGap === 0 ? <div className="gameoverlay">Solved in {timer} seconds! Your score is 300/{timer}s *{tileCount} tiles{hintCount > 0 ? ` with a halving Hint penalty applied ${hintCount} times` : ''} = {calculateScore()}</div> : <div className="gameoverlay">Time ellapsed: {timer} seconds     Hints used: {hintCount}     Current score: {calculateScore()}</div>}
       <StyledBoard tileGap={tileGap} widthz={splitData.cols * splitData.side + tileGap*(splitData.cols + 1)} heightz={splitData.rows * splitData.side + tileGap*(splitData.rows + 1)}>
         {splitData2.map((item,index)=> {
           return <Tile item={item} key={index} url={single_image.url} side={splitData.side} adjustMatrix={adjustMatrix} glowUnsolved={glowUnsolved}></Tile>
