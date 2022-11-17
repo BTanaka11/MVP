@@ -48,7 +48,7 @@ let randomRotate = {
   4: [1,2,3,0]
 };
 
-const convertSplitDataToObjectPosition = (splitData) => {
+const convertSplitDataToObjectPosition = (splitData, dontRotate = false) => {
   let resultsMatrix =[];
 
   const getRandomRotation = () => {
@@ -59,7 +59,7 @@ const convertSplitDataToObjectPosition = (splitData) => {
     resultsMatrix.push([]);
     for (let k = 1; k <= splitData.cols; k ++) {
       let cssHelper = `left -${(k-1)*splitData.side}px top -${(i-1)*splitData.side}px`;
-      let randomRot = getRandomRotation();
+      let randomRot = dontRotate? randomRotate[1] : getRandomRotation();
       resultsMatrix[i-1].push({cssHelper: cssHelper,matrixLoc: [i-1, k-1],rotation:randomRot, solvedTile: randomRot === randomRotate[1] ? true: false});
     }
   }
@@ -70,19 +70,35 @@ const convertSplitDataToObjectPosition = (splitData) => {
 export const Game = ({single_image, img_category, tileCount, setMode, name})=> {
   let splitData = OptimalImageSplitting(single_image.width, single_image.height, tileCount);
 
+  const [phase, setPhase] = React.useState('fullImage');
   const [tileGap, setTileGap] = React.useState(10);
-  const [timer, setTimer] = React.useState(0);
+  const [timer, setTimer] = React.useState(null);
   const [hintCount, sethintCount] = React.useState(0);
-  const [matrix, setMatrix] = React.useState(convertSplitDataToObjectPosition(splitData));
+  const [matrix, setMatrix] = React.useState(convertSplitDataToObjectPosition(splitData, true));
   const [glowUnsolved, setglowUnsolved] = React.useState(false);
 
   const calculateScore = () => {
     return Math.floor(300 / timer * tileCount * (.5 ** hintCount));
   };
 
+  React.useEffect(()=> {
+    setTimeout(()=> {
+      setPhase('croppedImage');
+      setTimeout(()=> {
+        setPhase('splitCroppedImage');
+        setTimeout(()=> {
+          setMatrix(convertSplitDataToObjectPosition(splitData));
+          setPhase('play');
+          setTimer(0);
+        }, 1000);
+      }, 1000);
+    }, 1000);
+
+  }, []);
+
   React.useEffect(() => {
     var interval;
-    if (tileGap > 0) {
+    if (tileGap > 0 && phase === 'play') {
       interval = setInterval(() => {setTimer(timer + 1)}, 1000);
       return () => clearInterval(interval);
     } else {
@@ -155,18 +171,50 @@ export const Game = ({single_image, img_category, tileCount, setMode, name})=> {
     }, 1000)
   };
 
-  return (
-  <div>
+  if (phase === 'fullImage') {
+    return (
+      <div>
+        <div className="gameoverlay">3!</div>
+        <img src={single_image.url}></img>
+      </div>
+    )
+  } else if (phase ==='croppedImage') {
+    return (
+      <div>
+        <div className="gameoverlay">2!</div>
+        <StyledBoard tileGap={0} widthz={splitData.cols * splitData.side + tileGap*(splitData.cols + 1)} heightz={splitData.rows * splitData.side + tileGap*(splitData.rows + 1)}>
+        {splitData2.map((item,index)=> {
+          return <Tile item={item} key={index} url={single_image.url} side={splitData.side} adjustMatrix={adjustMatrix} glowUnsolved={glowUnsolved}></Tile>
+        })}
+      </StyledBoard>
+      </div>
+    )
+  } else if (phase === 'splitCroppedImage') {
+    return (
+      <div>
+        <div className="gameoverlay">1!</div>
+        <StyledBoard tileGap={tileGap} widthz={splitData.cols * splitData.side + tileGap*(splitData.cols + 1)} heightz={splitData.rows * splitData.side + tileGap*(splitData.rows + 1)}>
+        {splitData2.map((item,index)=> {
+          return <Tile item={item} key={index} url={single_image.url} side={splitData.side} adjustMatrix={adjustMatrix} glowUnsolved={glowUnsolved}></Tile>
+        })}
+      </StyledBoard>
+      </div>
+    )
+  } else if (phase === 'play') {
 
-    {tileGap === 0 ? <div className="gameoverlay">Solved in {timer} seconds! Your score is 300/{timer}s *{tileCount} tiles{hintCount > 0 ? ` with a halving Hint penalty applied ${hintCount} times` : ''} = {calculateScore()}</div> : <div className="gameoverlay">Time ellapsed: {timer} seconds     Hints used: {hintCount}</div>}
-    <StyledBoard tileGap={tileGap} widthz={splitData.cols * splitData.side + tileGap*(splitData.cols + 1)} heightz={splitData.rows * splitData.side + tileGap*(splitData.rows + 1)}>
-      {splitData2.map((item,index)=> {
-        return <Tile item={item} key={index} url={single_image.url} side={splitData.side} adjustMatrix={adjustMatrix} glowUnsolved={glowUnsolved}></Tile>
-      })}
-    </StyledBoard>
-    <div className="buttoncontainer"><button className="playbutton" onClick={hintHandler}>Hint</button></div>
-  </div>
-  )
+    return (
+    <div>
+
+      {tileGap === 0 ? <div className="gameoverlay">Solved in {timer} seconds! Your score is 300/{timer}s *{tileCount} tiles{hintCount > 0 ? ` with a halving Hint penalty applied ${hintCount} times` : ''} = {calculateScore()}</div> : <div className="gameoverlay">Time ellapsed: {timer} seconds     Hints used: {hintCount}</div>}
+      <StyledBoard tileGap={tileGap} widthz={splitData.cols * splitData.side + tileGap*(splitData.cols + 1)} heightz={splitData.rows * splitData.side + tileGap*(splitData.rows + 1)}>
+        {splitData2.map((item,index)=> {
+          return <Tile item={item} key={index} url={single_image.url} side={splitData.side} adjustMatrix={adjustMatrix} glowUnsolved={glowUnsolved}></Tile>
+        })}
+      </StyledBoard>
+      <div className="buttoncontainer"><button className="playbutton" onClick={hintHandler}>Hint</button></div>
+    </div>
+    )
+  }
 }
 
 export const Tile = ({item,url,side,adjustMatrix,glowUnsolved})=> {

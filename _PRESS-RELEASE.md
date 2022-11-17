@@ -6,11 +6,12 @@
 This app is a puzzle game in which the player rotates tiles of a split up randomly generated image to try to restore the original image as fast as possible. Score is based on time and uploaded to a leaderboard. Tired of Sudoku? Give this a try! It solves the problem of commuter boredom too.
 
 ## Customer Quote ##
-"I've played this every morning during breakfast. It's a nice little app which flexes your reaction times and problem solving." - Mike, Tile pu
+"I've played this every morning during breakfast. It's a nice little app which flexes your reaction times and problem solving." - Mike, Tile puzzler
 
 ## How to Get Started ##
   npm install
   npm run react-dev
   npm run start
+  Your score is calculated by the formula: 300 / time * tile Count * (.5 ^ hints Used Count)
 
-Happy tile rotating!
+Happy rotating!
