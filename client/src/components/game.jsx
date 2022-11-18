@@ -24,7 +24,7 @@ const StyledImg = styled.img`
   }};
   animation-duration: 1s;
   animation-iteration-count: 1;
-  box-shadow: ${props=>props.glowUnsolved ? '0 0 5px red' : 'none'};
+  box-shadow: ${props=>props.glowUnsolved ? '0 0 10px red' : 'none'};
 `;
 
 //   transform: rotate(${({rotation})=>{
@@ -112,10 +112,10 @@ export const Game = ({single_image, img_category, tileCount, setMode, name})=> {
         setTimeout(()=> {
           setMatrix(convertSplitDataToObjectPosition(splitData));
           setPhase('play');
-          setTimer(0);
-        }, 1000);
-      }, 1000);
-    }, 1000);
+          setTimer(1);
+        }, 1300);
+      }, 1300);
+    }, 1300);
 
   }, []);
 
