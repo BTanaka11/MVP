@@ -207,7 +207,7 @@ export const Game = ({single_image, img_category, tileCount, setMode, name})=> {
     return (
       <div>
         <div className="gameoverlay">2!</div>
-        <StyledBoard tileGap={0} widthz={splitData.cols * splitData.side + tileGap*(splitData.cols + 1)} heightz={splitData.rows * splitData.side + tileGap*(splitData.rows + 1)}>
+        <StyledBoard tileGap={0} widthz={splitData.cols * splitData.side} heightz={splitData.rows * splitData.side}>
         {splitData2.map((item,index)=> {
           return <Tile item={item} key={index} url={single_image.url} side={splitData.side} adjustMatrix={adjustMatrix} glowUnsolved={glowUnsolved}></Tile>
         })}
