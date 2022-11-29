@@ -1,4 +1,4 @@
-## Tile 2 Image Puzzle ##
+## Tile 2 Image ##
   A puzzle game in which the player rotates tiles of a split up randomly selected image to try to restore the original image as fast as possible. Score is based on time, tile count, and hints used count. Results are saved to a leaderboard.
 
 ## Background ##
