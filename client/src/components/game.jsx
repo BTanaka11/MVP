@@ -27,10 +27,6 @@ const StyledImg = styled.img`
   box-shadow: ${props=>props.glowUnsolved ? '0 0 10px red' : 'none'};
 `;
 
-//   transform: rotate(${({rotation})=>{
-//     return {0:'0', 3:'90', 2:'180',1:'270'}[rotation[0]];
-//   }}deg);
-
 const StyledBoard = styled.div`
   display:flex;
   flex-direction: row;
@@ -89,7 +85,7 @@ const convertSplitDataToObjectPosition = (splitData, dontRotate = false) => {
 
   return resultsMatrix;
 }
-// SCORE = 300 / completiontime * tilecount - errorRateReduction. if hintcount used divide by 2.
+
 export const Game = ({single_image, img_category, tileCount, setMode, name})=> {
   let splitData = OptimalImageSplitting(single_image.width, single_image.height, tileCount);
 

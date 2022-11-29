@@ -8,6 +8,7 @@ app.use(express.json());
 app.use(express.static(__dirname + '/../client/dist'));
 
 app.get('/shutterstock_image_categories', (req, res)=> {
+
   retrieveCategories()
   .then((val)=>{
     res.send(val.data.data);
@@ -16,12 +17,6 @@ app.get('/shutterstock_image_categories', (req, res)=> {
 });
 
 app.get('/shutterstock_image', (req, res)=> {
-
-  // res.send({
-  //   url: 'https://ak.picdn.net/shutterstock/photos/2112280592/watermark_1000/223ca7790ff5d3ef7d19c18efb62885f/preview_1000-2112280592.jpg',
-  //   width: 1000,
-  //   height: 666
-  // });
 
   retrieveRandomImage(req.query.img_category)
   .then((val)=> {
@@ -39,6 +34,7 @@ app.get('/shutterstock_image', (req, res)=> {
 });
 
 app.get('/leaderboard', (req, res)=> {
+
   getLeaderboard()
   .then((results)=> {
     res.send(results.rows);
@@ -49,6 +45,7 @@ app.get('/leaderboard', (req, res)=> {
 });
 
 app.post('/leaderboard', (req, res)=> {
+
   addToLeaderboard(req.body)
   .then(()=> {
     res.send();
@@ -59,6 +56,7 @@ app.post('/leaderboard', (req, res)=> {
 });
 
 const PORT = 3000;
+
 app.listen(PORT, ()=> {
   console.log(`Listening on port ${PORT}`);
 });

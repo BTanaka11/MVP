@@ -33,13 +33,6 @@ export const SettingsModal = ({image_categories, setMode})=> {
       <label htmlFor="username">Username</label>
       <input type="text" name="username" id="username" ref={name} placeholder="Enter your name..."></input>
 
-      {/* <label htmlFor="difficulty">Choose a difficulty:</label>
-      <select onChange={(e)=>{setDifficulty(e.target.value)}} name="difficulty" id="difficulty">
-        <option value="Easy">Easy</option>
-        <option value="Medium">Medium</option>
-        <option value="Hard">Hard</option>
-      </select> */}
-
       <label htmlFor="tile">How many tiles?</label>
       <input type="number" name="tile" id="tile" ref={tileCount} placeholder="Enter tile count (higher is harder)..." min="1" max="100"></input>
 

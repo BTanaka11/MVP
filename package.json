@@ -1,13 +1,14 @@
 {
-  "name": "mvp",
+  "name": "tile2image",
   "version": "1.0.0",
-  "description": "minimum viable product - jigsaw puzzle",
+  "description": "minimum viable product - Tile 2 Image",
   "main": "index.js",
   "scripts": {
     "react-dev": "webpack -d --watch",
     "prestart": "psql postgres -U bentanaka -d postgres -f schema.sql",
     "start": "nodemon server/index.js",
-    "poststart": "node database/postgresdb.js"
+    "poststart": "node database/postgresdb.js",
+    "start-game": "npx webpack && node server/index.js && node database/postgresdb.js"
   },
   "repository": {
     "type": "git",
